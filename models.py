@@ -30,7 +30,7 @@ def test_accuracy(model, dataloader):
         for image_batch, label_batch in dataloader:
             #バッチをmodelと同じデバイスに転送する
             image_batch = image_batch.to(device)
-
+            label_batch = label_batch.to(device)
         
             logits_batch = model(image_batch)
 
@@ -42,8 +42,17 @@ def test_accuracy(model, dataloader):
     return accuracy
 
 def train(model, dataloader, loss_fn, optimizer):
+
+    #モデルのデバイスを調べる
+    device = next(model.parameters()).device    
     model.train()
     for image_batch, label_batch in dataloader:
+         #バッチをmodelと同じデバイスに転送する
+        image_batch = image_batch.to(device)
+        label_batch = label_batch.to(device)
+        
+
+
         logits_batch = model(image_batch)
 
         loss = loss_fn(logits_batch, label_batch)
@@ -56,11 +65,18 @@ def train(model, dataloader, loss_fn, optimizer):
 
 def test(model, dataloader, loss_fn):
     loss_total = 0.0
+
+    #モデルのデバイスを調べる
+    device = next(model.parameters()).device
+
     model.eval()
     with torch.no_grad():
         for image_batch, label_batch in dataloader:
-            logits_batch = model(image_batch)
+            image_batch = image_batch.to(device)
+            label_batch = label_batch.to(device)
 
+            logits_batch = model(image_batch)
+        
             loss = loss_fn(logits_batch, label_batch)
             loss_total += loss.item()
     
