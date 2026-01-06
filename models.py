@@ -22,9 +22,15 @@ class MyModel(nn.Module):
 def test_accuracy(model, dataloader):
     n_corrects = 0
 
+    #モデルのデバイスを調べる
+    device = next(model.parameters()).device
+
     model.eval()
     with torch.no_grad():
         for image_batch, label_batch in dataloader:
+            #バッチをmodelと同じデバイスに転送する
+            image_batch = image_batch.to(device)
+
         
             logits_batch = model(image_batch)
 

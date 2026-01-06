@@ -8,6 +8,8 @@ import torchvision.transforms.v2 as transforms
 
 import models
 
+#テスト　コメント追加
+
 ds_transform = transforms.Compose([
     transforms.ToImage(),
     transforms.ToDtype(torch.float32, scale=True)
@@ -37,12 +39,17 @@ dataloader_test = torch.utils.data.DataLoader(
     batch_size=batch_size,
 )
 
+#GPUかCPUを自動で選ぶ
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
 #for image_batch, label_batch in dataloader_test:
 #    print(image_batch.shape)
 #    print(label_batch.shape)
 #    break
 
 model = models.MyModel()
+#モデルを選んだデバイスに転送する
+model.to(device)
 
 #acc_test = models.test_accuracy(model, dataloader_test)
 #print(f'test accuracy: {acc_test*100:.3f}%')
